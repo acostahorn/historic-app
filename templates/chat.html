@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with {{ character.name}}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+    <div class="container">
+        <header class="chat-header">
+            <div class="character-info">
+                <img src="{{ url_for('static', filename='images/' + character.char_id + '.jpg') }}"
+                    alt="{{ character.name }}" class="portrait">
+                <div>
+                    <h1>{{ character.name }}</h1>
+                    <p class="persona-hint"><i>{{ character.persona }}</i></p>
+
+                </div>
+            </div>
+            <a href="../" class="back-btn">← Back to Selection</a>
+
+        </header>
+
+        <hr>
+
+        <div id="chat-window">
+            {% for msg in character.memory %}
+            <div class="message {{ msg.role }}">
+                <strong>{{ character.name if msg.role == 'assistant' else 'You'}}</strong>
+                <p>{{ msg.content }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="input-area">
+            <textarea id="user-input" rows="4" cols="60"></textarea>
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+    <script>
+        const CHAR_ID = "{{ character.char_id}}"
+    </script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+</body>
+
+</html>

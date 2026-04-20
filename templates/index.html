@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historical Chat - Selection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Choose your companion</h1>
+        <form id="selection-form">
+            <select name="" id="char-select">
+            <option value="" disabled selected>Select a historical figure...</option>
+            {% for char_id, char in characters.items() %}
+                <option value="{{ char_id}}">{{ char.name }}</option>
+            {% endfor %}
+            </select>
+            <br>
+            <button type="button" onclick="goToChat()">Start Conversation</button>
+        </form>
+    </div>
+
+   <script src="{{ url_for('static', filename='js/app.js') }}"></script> 
+</body>
+</html>

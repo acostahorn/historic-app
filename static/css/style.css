@@ -1,0 +1,67 @@
+body {
+    background-color: #f4ece1; /* Old paper color */
+    color: #2c3e50;
+}
+
+.container {
+    border: 2px solid #8b4513;
+    border-radius: 0; /* Sharp corners feel more "old world" */
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+}
+
+#chat-window {
+    height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.message {
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 8px;
+    max-width: 80%;
+}
+
+/* User's messages on the right */
+.user {
+    align-self: flex-end;
+    background-color: #007bff;
+    color: white;
+}
+
+/* AI's messages on the left */
+.assistant {
+    align-self: flex-start;
+    background-color: #e9ecef;
+    color: #333;
+}
+
+.input-area {
+    width: 200px
+}
+
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #8b4513; /* A nice 'old paper' brown */
+}
+
+.character-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.portrait {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%; /* Makes it circular */
+    border: 3px solid #d4af37; /* Gold frame */
+    object-fit: cover; /* Prevents stretching */
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+}
