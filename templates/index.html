@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historical Debate Engine</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <main class="app-shell" data-start-view="{{ start_view or 'dashboard' }}">
+        <section class="masthead" aria-labelledby="page-title">
+            <div>
+                <p class="eyebrow">Impossible Historical Dialogue</p>
+                <h1 id="page-title">Historical Debate Engine</h1>
+                <p class="lede">
+                    A historically grounded conversation space for persuasive, civil exchanges between figures who never shared a table.
+                </p>
+            </div>
+            <div class="era-mark" aria-hidden="true">
+                <span>Salon</span>
+                <small>Across centuries</small>
+            </div>
+        </section>
+
+        <section class="app-nav" aria-label="Workspace navigation">
+            <button type="button" class="view-tab active" data-view="dashboard">Home</button>
+            <button type="button" class="view-tab" data-view="conversation">Conversation</button>
+            <div id="session-chip" class="session-chip">Not signed in</div>
+        </section>
+
+        <section class="view-stack">
+            <section id="dashboard-view" class="view-panel dashboard-view" aria-labelledby="dashboard-title">
+                <div class="dashboard-grid">
+                    <section class="dashboard-card auth-panel" aria-labelledby="auth-title">
+                        <h2 id="auth-title">Account</h2>
+                        <div id="auth-status" class="auth-status">Not signed in</div>
+                        <div id="bootstrap-admin-banner" class="bootstrap-banner hidden"></div>
+                        <div class="auth-grid">
+                            <label>
+                                Username
+                                <input type="text" id="auth-username" autocomplete="username">
+                            </label>
+                            <label>
+                                Password
+                                <input type="password" id="auth-password" autocomplete="current-password">
+                            </label>
+                            <div class="auth-actions">
+                                <button id="auth-login" type="button">Log in</button>
+                                <button id="auth-register" type="button">Register</button>
+                                <button id="auth-logout" type="button" class="ghost-button hidden">Log out</button>
+                            </div>
+                        </div>
+                        <p class="field-note">Admins can remove custom characters. Conversation memory is stored per account.</p>
+                    </section>
+
+                    <section class="dashboard-card profile-panel">
+                        <h2 id="dashboard-title">Home dashboard</h2>
+                        <p class="dashboard-lede">Pick a character, check your sign-in state, and jump into the conversation view when ready.</p>
+                        <div class="profile-block">
+                            <span class="profile-label">Logged in user</span>
+                            <strong id="profile-username">Not signed in</strong>
+                        </div>
+                        <div class="dashboard-actions">
+                            <button id="go-conversation" type="button">Open conversation</button>
+                            <button id="new-character-modal-toggle" type="button" class="ghost-button">New character</button>
+                        </div>
+                    </section>
+
+                    <section class="dashboard-card library-panel">
+                        <div class="library-header">
+                            <label for="character-search">Character library</label>
+                            <input id="character-search" type="search" placeholder="Search characters...">
+                        </div>
+                        <div id="character-library" class="character-library" aria-live="polite"></div>
+                    </section>
+                </div>
+            </section>
+
+            <section id="conversation-view" class="view-panel conversation-view" aria-labelledby="conversation-title-wrap">
+                <section class="conversation-layout">
+                    <aside class="control-panel">
+                        <div class="mode-tabs" role="tablist" aria-label="Conversation mode">
+                            <button class="mode-tab active" id="solo-mode" type="button" data-mode="solo" role="tab" aria-selected="true">One-on-one</button>
+                            <button class="mode-tab" id="debate-mode" type="button" data-mode="debate" role="tab" aria-selected="false">Impossible debate</button>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="new-character-modal-toggle-inline">Create character</label>
+                            <button id="new-character-modal-toggle-inline" type="button" class="ghost-button">New character</button>
+                            <p class="field-note">Add a real deceased person or a literary character from an actual published work.</p>
+                        </div>
+
+                        <div class="field-group" id="solo-controls">
+                            <label for="char1">Speak with</label>
+                            <select id="char1">
+                                {% for character in characters %}
+                                <option value="{{ character['id'] }}">{{ character['name'] }}</option>
+                                {% endfor %}
+                            </select>
+                            <p class="field-note">Ask a question, challenge an argument, or request a historical perspective.</p>
+                        </div>
+
+                        <div class="field-group hidden" id="debate-controls">
+                            <label for="debate-topic">Debate topic</label>
+                            <textarea id="debate-topic" rows="5">What does a state owe its people when security and liberty appear to conflict?</textarea>
+
+                            <div class="versus-grid">
+                                <div>
+                                    <label for="char-debate-1">Opening voice</label>
+                                    <select id="char-debate-1">
+                                        {% for character in characters %}
+                                        <option value="{{ character['id'] }}">{{ character['name'] }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="char-debate-2">Response voice</label>
+                                    <select id="char-debate-2">
+                                        {% for character in characters %}
+                                        <option value="{{ character['id'] }}" {% if loop.index == 2 %}selected{% endif %}>{{ character['name'] }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <p class="field-note">Each exchange returns six animated turns and saves the pair's local context.</p>
+                        </div>
+                    </aside>
+
+                    <section class="transcript-panel">
+                        <div class="transcript-header">
+                            <button id="print-chat" type="button">Print Transcript</button>
+                            <div>
+                                <h2 id="conversation-title">One-on-one conversation</h2>
+                                <p id="conversation-subtitle">Choose a figure and write your opening line.</p>
+                            </div>
+                            <button class="ghost-button" id="clear-chat" type="button">Clear</button>
+                        </div>
+
+                        <div id="chat-window" aria-live="polite" aria-label="Conversation transcript">
+                            <div class="message system">
+                                <strong>Archive note</strong>
+                                <p>Select a mode to begin. The app uses historically inspired voices while avoiding harmful praise, instructions, or exact-transcript claims.</p>
+                            </div>
+                        </div>
+
+                        <form class="composer" id="message-form">
+                            <input type="text" id="user-input" autocomplete="off" placeholder="Ask a question or frame the debate...">
+                            <button id="send-button" type="submit">Send</button>
+                        </form>
+                    </section>
+                </section>
+            </section>
+        </section>
+
+        <dialog id="character-dialog" class="character-dialog">
+            <form id="character-form" class="character-form">
+                <div class="dialog-header">
+                    <h2 id="character-dialog-title">Create a character</h2>
+                    <button type="button" id="close-character-dialog" class="ghost-button">Close</button>
+                </div>
+                <div class="character-grid">
+                    <label>
+                        Name
+                        <input type="text" id="character-name" maxlength="80" placeholder="e.g. Rob Roy">
+                    </label>
+                    <label>
+                        Avatar image
+                        <input type="file" id="character-avatar" accept="image/png,image/jpeg,image/webp,image/gif">
+                    </label>
+                    <div id="character-avatar-preview" class="avatar-preview" aria-live="polite"></div>
+                    <label>
+                        Type
+                        <select id="character-type">
+                            <option value="historical">Historical person</option>
+                            <option value="literary">Literary character</option>
+                        </select>
+                    </label>
+                    <label>
+                        Default language
+                        <input type="text" id="character-language" placeholder="e.g. Scots, French, Spanish">
+                    </label>
+                    <label>
+                        Source title
+                        <input type="text" id="character-source-title" placeholder="Required for literary characters">
+                    </label>
+                    <label>
+                        Source author
+                        <input type="text" id="character-source-author" placeholder="Required for literary characters">
+                    </label>
+                    <label class="wide">
+                        Source URL (optional)
+                        <input type="url" id="character-source-url" placeholder="https://...">
+                    </label>
+                    <label class="wide">
+                        Biography
+                        <textarea id="character-bio" rows="3" placeholder="Short historical or literary summary."></textarea>
+                    </label>
+                    <label class="wide">
+                        System prompt
+                        <textarea id="character-system-prompt" rows="6" placeholder="Voice, tone, safety constraints, and historical/literary framing."></textarea>
+                    </label>
+                </div>
+                <div class="character-actions">
+                    <button type="button" id="delete-character-button" class="ghost-button hidden">Delete character</button>
+                    <button type="submit" id="save-character-button">Save character</button>
+                </div>
+                <p class="field-note">
+                    Historical characters must be deceased. Literary characters must come from a real published work.
+                </p>
+            </form>
+        </dialog>
+    </main>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
