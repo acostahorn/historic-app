@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify, session, send_from_directory
 import os
 import re
+import time
 from pathlib import Path
 from werkzeug.utils import secure_filename
 import database as db
@@ -176,7 +177,7 @@ def chat_handler():
         context_key = debate_context_key(p1['id'], p2['id'])
         if not continue_flag:
             save_msg(user['id'], "User", user_text, context_key, character_id=None)
-
+            time.sleep(0.2)
         history = build_debate_history(user['id'], p1, p2, context_key, user_text, continue_flag)
         debate_temperature = get_debate_temperature(p1['name'], p2['name'])
         speakers = [p1, p2]
