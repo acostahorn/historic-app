@@ -5,6 +5,9 @@ A web-based platform facilitating impossible historical dialogues, allowing user
 ## Project Overview
 The Historical Debate Engine bridges the gap between historical perspective and modern inquiry. By leveraging advanced Large Language Model (LLM) technology, it provides a persistent, interactive space where users can challenge the arguments and perspectives of deceased historical figures.
 
+## Sample Image
+<img width="1435" height="893" alt="image" src="https://github.com/user-attachments/assets/147d3293-3b91-48aa-8803-5b3ec0b2562a" />
+
 ## Technical Architecture & Design
 The application is built with a focus on **security**, **portability**, and **low-latency performance**.
 
